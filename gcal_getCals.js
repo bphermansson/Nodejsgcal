@@ -22,6 +22,11 @@ function listCalendars(auth) {
         showHidden: true
       };
       
+      var calfile = "calendars.txt"
+      var calFiles = fs.createWriteStream(calfile, {
+        flags: 'a' // 'a' means appending (old data will be preserved)
+      })
+
       calendar.calendarList.list(params)
         .then(resp => {
           var respons = resp.data.items
@@ -30,7 +35,11 @@ function listCalendars(auth) {
           {
             var res = respons[x].id
             console.log(res)
+            calFiles.write(res + "\n")
           }
+          calFiles.end()
+          console.log("Calendar list written to " + calfile)
+
         }).catch(err => {
           console.log(err.message);
         });
